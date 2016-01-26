@@ -121,20 +121,6 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
-
-        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-
-        @Override
-        protected String[] doInBackground(String... params) {
-
-            String[] result = processForecastRequest();
-
-            // This will only happen if there was an error getting or parsing the forecast.
-            return result;
-        }
-    }
-
     /**
      * Take the String representing the complete forecast in JSON Format and
      * pull out the data we need to construct the Strings needed for the wireframes.
