@@ -47,9 +47,9 @@ public class WeatherProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = WeatherContract.CONTENT_AUTHORITY;
 
-        // For each type of URI you want to add, create a corresponding code.
-        matcher.addURI(authority, WeatherContract.PATH_WEATHER, WEATHER);
-        matcher.addURI(authority, WeatherContract.PATH_LOCATION, LOCATION);
+        // TODO Here, for each type of URI you want to add, add the URI to the matcher and pass the
+        // corresponding code.
+
         return matcher;
     }
 
