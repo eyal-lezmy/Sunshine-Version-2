@@ -89,38 +89,26 @@ public class WeatherProvider extends ContentProvider {
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
-        Cursor retCursor;
+        Cursor retCursor = null;
+
         switch (sUriMatcher.match(uri)) {
             // "weather"
-            case WEATHER: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        WeatherContract.WeatherEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
+            case WEATHER:
+            //TODO get a readable database from mOpenHelper and query it on the Weather table
+            // using the passed parameters
+
+            break;
             // "location"
-            case LOCATION: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        WeatherContract.LocationEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
+            case LOCATION:
+
+                //TODO get a readable database from mOpenHelper and query it on the Weather table
+                // using the passed parameters
+            break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Here, we send a notification to the cursors, telling this uri has it's content changed.
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
@@ -155,6 +143,7 @@ public class WeatherProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        // Here, we send a notification to the cursors, telling this uri has it's content changed.
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
