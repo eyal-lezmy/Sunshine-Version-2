@@ -19,11 +19,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +37,7 @@ import android.widget.TextView;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
 
 
-public class DetailActivity extends ActionBarActivity {
+public class DetailActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,9 @@ public class DetailActivity extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             Log.v(LOG_TAG, "In onLoadFinished");
-            if (!data.moveToFirst()) { return; }
+            if (!data.moveToFirst()) {
+                return;
+            }
 
             String dateString = Utility.formatDate(
                     data.getLong(COL_WEATHER_DATE));
@@ -182,7 +184,7 @@ public class DetailActivity extends ActionBarActivity {
 
             mForecast = String.format("%s - %s - %s/%s", dateString, weatherDescription, high, low);
 
-            TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
+            TextView detailTextView = (TextView) getView().findViewById(R.id.detail_text);
             detailTextView.setText(mForecast);
 
             // If onCreateOptionsMenu has already happened, we need to update the share intent now.
@@ -192,6 +194,7 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) { }
+        public void onLoaderReset(Loader<Cursor> loader) {
+        }
     }
 }
