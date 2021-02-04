@@ -18,17 +18,24 @@ package com.example.android.sunshine.app.data;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
-import android.test.AndroidTestCase;
 import android.util.Log;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.android.sunshine.app.data.WeatherContract.LocationEntry;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
+
+import org.junit.Before;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /*
     Note: This is not a complete set of tests of the Sunshine ContentProvider, but it does test
@@ -37,9 +44,11 @@ import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
     Students: Uncomment the tests in this class as you implement the functionality in your
     ContentProvider to make sure that you've implemented things reasonably correctly.
  */
-public class TestProvider extends AndroidTestCase {
+public class TestProvider {
 
     public static final String LOG_TAG = TestProvider.class.getSimpleName();
+
+    Context mContext;
 
     /*
        This helper function deletes all records from both database tables using the ContentProvider.
@@ -93,9 +102,9 @@ public class TestProvider extends AndroidTestCase {
 
     // Since we want each test to start with a clean slate, run deleteAllRecords
     // in setUp (called by the test runner before each test).
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
+        mContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         deleteAllRecords();
     }
 
@@ -117,7 +126,7 @@ public class TestProvider extends AndroidTestCase {
 
             // Make sure that the registered authority matches the authority from the Contract.
             assertEquals("Error: WeatherProvider registered with authority: " + providerInfo.authority +
-                    " instead of authority: " + WeatherContract.CONTENT_AUTHORITY,
+                            " instead of authority: " + WeatherContract.CONTENT_AUTHORITY,
                     providerInfo.authority, WeatherContract.CONTENT_AUTHORITY);
         } catch (PackageManager.NameNotFoundException e) {
             // I guess the provider isn't registered correctly.
@@ -224,7 +233,7 @@ public class TestProvider extends AndroidTestCase {
 
         // Has the NotificationUri been set correctly? --- we can only test this easily against API
         // level 19 or greater because getNotificationUri was added in API level 19.
-        if ( Build.VERSION.SDK_INT >= 19 ) {
+        if (Build.VERSION.SDK_INT >= 19) {
             assertEquals("Error: Location Query did not properly set NotificationUri",
                     locationCursor.getNotificationUri(), LocationEntry.CONTENT_URI);
         }
@@ -259,7 +268,7 @@ public class TestProvider extends AndroidTestCase {
 
         int count = mContext.getContentResolver().update(
                 LocationEntry.CONTENT_URI, updatedValues, LocationEntry._ID + "= ?",
-                new String[] { Long.toString(locationRowId)});
+                new String[]{Long.toString(locationRowId)});
         assertEquals(count, 1);
 
         // Test to make sure our observer is called.  If not, we throw an assertion.
@@ -423,12 +432,13 @@ public class TestProvider extends AndroidTestCase {
 
 
     static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
+
     static ContentValues[] createBulkInsertWeatherValues(long locationRowId) {
         long currentTestDate = TestUtilities.TEST_DATE;
-        long millisecondsInADay = 1000*60*60*24;
+        long millisecondsInADay = 1000 * 60 * 60 * 24;
         ContentValues[] returnContentValues = new ContentValues[BULK_INSERT_RECORDS_TO_INSERT];
 
-        for ( int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate+= millisecondsInADay ) {
+        for (int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate += millisecondsInADay) {
             ContentValues weatherValues = new ContentValues();
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_LOC_KEY, locationRowId);
             weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, currentTestDate);

@@ -15,13 +15,21 @@
  */
 package com.example.android.sunshine.app;
 
-import android.annotation.TargetApi;
+import android.content.Context;
 import android.database.Cursor;
-import android.test.AndroidTestCase;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 
-public class TestFetchWeatherTask extends AndroidTestCase{
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
+
+public class TestFetchWeatherTask {
     static final String ADD_LOCATION_SETTING = "Sunnydale, CA";
     static final String ADD_LOCATION_CITY = "Sunnydale";
     static final double ADD_LOCATION_LAT = 34.425833;
@@ -32,7 +40,7 @@ public class TestFetchWeatherTask extends AndroidTestCase{
         This test will only run on API level 11 and higher because of a requirement in the
         content provider.
      */
-    @TargetApi(11)
+    @Test
     public void testAddLocation() {
         // start from a clean state
         getContext().getContentResolver().delete(WeatherContract.LocationEntry.CONTENT_URI,
@@ -48,7 +56,7 @@ public class TestFetchWeatherTask extends AndroidTestCase{
                 locationId == -1);
 
         // test all this twice
-        for ( int i = 0; i < 2; i++ ) {
+        for (int i = 0; i < 2; i++) {
 
             // does the ID point to our location?
             Cursor locationCursor = getContext().getContentResolver().query(
@@ -73,9 +81,9 @@ public class TestFetchWeatherTask extends AndroidTestCase{
                 assertEquals("Error: the queried value of location city is incorrect",
                         locationCursor.getString(2), ADD_LOCATION_CITY);
                 assertEquals("Error: the queried value of latitude is incorrect",
-                        locationCursor.getDouble(3), ADD_LOCATION_LAT);
+                        locationCursor.getDouble(3), ADD_LOCATION_LAT, 0);
                 assertEquals("Error: the queried value of longitude is incorrect",
-                        locationCursor.getDouble(4), ADD_LOCATION_LON);
+                        locationCursor.getDouble(4), ADD_LOCATION_LON, 0);
             } else {
                 fail("Error: the id you used to query returned an empty cursor");
             }
@@ -100,5 +108,9 @@ public class TestFetchWeatherTask extends AndroidTestCase{
         getContext().getContentResolver().
                 acquireContentProviderClient(WeatherContract.LocationEntry.CONTENT_URI).
                 getLocalContentProvider().shutdown();
+    }
+
+    private Context getContext() {
+        return InstrumentationRegistry.getInstrumentation().getTargetContext();
     }
 }

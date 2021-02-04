@@ -8,19 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.test.AndroidTestCase;
 
 import com.example.android.sunshine.app.utils.PollingCheck;
 
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /*
     Students: These are functions and some test data to make it easier to test your database and
     Content Provider.  Note that you'll want your WeatherContract class to exactly match the one
     in our solution to use these as-given.
  */
-public class TestUtilities extends AndroidTestCase {
+public class TestUtilities {
     static final String TEST_LOCATION = "99705";
     static final long TEST_DATE = 1419033600L;  // December 20th, 2014
 
